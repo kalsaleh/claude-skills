@@ -1,5 +1,9 @@
 import { PlaybookDetail } from "@/components/PlaybookDetail";
 
+export function generateStaticParams() {
+  return [{ slug: "cross-dept" }, { slug: "promotion" }];
+}
+
 export default async function PlaybookPage({
   params,
 }: {
