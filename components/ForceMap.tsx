@@ -353,6 +353,14 @@ export function ForceMap({
           context.lineWidth = 1.6;
           context.stroke();
         }
+        if (node.layer === "personal") {
+          context.beginPath();
+          context.arc(node.x, node.y, radius + 5, 0, Math.PI * 2);
+          context.strokeStyle = "rgba(154, 168, 159, 0.7)";
+          context.setLineDash([4, 3]);
+          context.stroke();
+          context.setLineDash([]);
+        }
         if (node.tags?.includes("fold")) {
           context.beginPath();
           context.arc(node.x, node.y, radius + 8, 0, Math.PI * 2);

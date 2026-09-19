@@ -3,6 +3,7 @@
 import { DEPARTMENT_COLOURS } from "@/lib/departments";
 import { neighbours, youOf } from "@/lib/network";
 import type { Workplace } from "@/lib/types";
+import { MATTER_LABELS, TIE_LABELS } from "@/lib/types";
 
 export function PersonDrawer({
   workplace,
@@ -60,6 +61,15 @@ export function PersonDrawer({
           </span>
         </div>
         {person.bio ? <p className="text-chalk/90 leading-relaxed">{person.bio}</p> : null}
+        {person.enrichment ? (
+          <p className="rounded-xl bg-peat px-3 py-2 text-mist">
+            You named them: {person.enrichment.team} · {MATTER_LABELS[person.enrichment.matter]} ·{" "}
+            {TIE_LABELS[person.enrichment.tie]} tie
+            {person.layer === "personal" ? " · personal layer" : ""}
+          </p>
+        ) : person.layer === "personal" ? (
+          <p className="rounded-xl bg-peat px-3 py-2 text-mist">Personal layer — outside the workplace match.</p>
+        ) : null}
         {person.tags?.length ? (
           <div className="flex flex-wrap gap-2">
             {person.tags.map((tag) => (

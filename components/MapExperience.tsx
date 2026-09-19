@@ -75,8 +75,17 @@ export function MapExperience() {
         <h1 className="font-display text-2xl text-chalk">Informal chart</h1>
         <p className="mt-2 text-xs text-mist">
           Drag the peat to pan. Scroll to zoom. Click a person. Copper rings are brokers; dashed
-          lines are weak ties; a purple dashed halo is a fold.
+          lines are weak ties; mist dashed rings are the personal layer.
         </p>
+        {workplace.enrichmentSkipped ? (
+          <p className="mt-3 rounded-xl border border-line bg-peat px-3 py-2 text-xs text-chalk">
+            Soft empty state: LinkedIn proved the links. Name five people on{" "}
+            <Link href="/enrich" className="text-aquifer underline">
+              the enrich queue
+            </Link>{" "}
+            and insights will speak.
+          </p>
+        ) : null}
         <fieldset className="mt-4 space-y-2 text-sm text-mist">
           <label className="flex items-center gap-2">
             <input
@@ -116,7 +125,10 @@ export function MapExperience() {
             </div>
           ))}
         </div>
-        <Link href="/import" className="mt-5 inline-block text-xs text-mist hover:text-chalk">
+        <Link href="/enrich" className="mt-5 inline-block text-xs text-mist hover:text-chalk">
+          Name more people
+        </Link>
+        <Link href="/import" className="mt-2 block text-xs text-mist hover:text-chalk">
           Replace with Connections.csv
         </Link>
         {highlight ? (

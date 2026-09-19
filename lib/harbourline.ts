@@ -1,4 +1,4 @@
-import type { Edge, Group, Person, Workplace } from "./types";
+import type { Edge, Enrichment, Group, MatterRole, Person, Workplace } from "./types";
 
 const YOU: Person = {
   id: "you",
@@ -560,18 +560,39 @@ export function buildHarbourlineWorkplace(profile?: {
   name: string;
   role: string;
   team: string;
+  company?: string;
   intent: Workplace["profile"]["intent"];
 }): Workplace {
-  const people = PEOPLE.map((person) =>
-    person.you
+  const people = PEOPLE.map((person) => {
+    const base = person.you
       ? {
           ...person,
           name: profile?.name ?? person.name,
           role: profile?.role ?? person.role,
           team: profile?.team ?? person.team,
         }
-      : { ...person },
-  );
+      : { ...person };
+    if (base.you) {
+      return { ...base, company: profile?.company ?? "Harbourline", layer: "workplace" as const };
+    }
+    let matter: MatterRole = "peer";
+    if (base.tags?.includes("sponsor")) matter = "sponsor";
+    else if (base.tags?.includes("broker")) matter = "broker";
+    else if (base.tags?.includes("manager")) matter = "decision_maker";
+    else if (base.tags?.includes("fold")) matter = "broker";
+    const tie = base.tags?.includes("weak-tie") ? "weak" : "working";
+    const enrichment: Enrichment = {
+      team: base.department,
+      matter,
+      tie,
+    };
+    return {
+      ...base,
+      company: "Harbourline",
+      layer: "workplace" as const,
+      enrichment,
+    };
+  });
 
   return {
     version: 1,
@@ -584,10 +605,15 @@ export function buildHarbourlineWorkplace(profile?: {
       name: profile?.name ?? YOU.name,
       role: profile?.role ?? YOU.role,
       team: profile?.team ?? YOU.team,
+      company: profile?.company ?? "Harbourline",
       intent: profile?.intent ?? "see-the-room",
     },
     people,
     edges: EDGES.map((edge) => ({ ...edge })),
     groups: GROUPS.map((group) => ({ ...group, memberIds: [...group.memberIds] })),
+    company: profile?.company ?? "Harbourline",
+    includeWorkplace: true,
+    includePersonal: false,
+    enrichmentSkipped: false,
   };
 }

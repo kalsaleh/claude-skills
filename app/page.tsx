@@ -30,16 +30,15 @@ export default function HomePage() {
             The chart under the chart.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-mist">
-            Groundwater is the informal organisation for individual contributors — who actually
-            walks a request across the building. It is not a pipeline, not a CRM, and not another
-            place to log touches.
+            Groundwater is an AI tool that helps you build the informal organisation — not a blank
+            canvas. LinkedIn proves the link. You name what it means.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/onboarding"
               className="rounded-full bg-aquifer px-5 py-3 text-sm font-medium text-peat hover:bg-aquifer/90"
             >
-              Load the Harbourline demo
+              Build your map
             </Link>
             <Link
               href="/privacy"
@@ -49,8 +48,8 @@ export default function HomePage() {
             </Link>
           </div>
           <p className="mt-6 max-w-lg text-sm text-mist">
-            Three steps. Then a UK SaaS workplace you can click. Optional LinkedIn
-            Connections.csv, parsed only in this browser.
+            Three taps: team · how they matter · how real the tie is. Then a map. Insights unlock
+            after five named people.
           </p>
         </div>
         <div className="relative overflow-hidden rounded-3xl border border-line bg-moss/80 p-6">
@@ -115,8 +114,8 @@ export default function HomePage() {
               body: "The Structural Fold pack is a tease, not a checkout. This map is for ICs walking their own building.",
             },
             {
-              title: "Not a cloud of your colleagues",
-              body: "Demo data is fictional Harbourline. Your CSV never leaves the machine. There is no account.",
+              title: "Not a blank canvas",
+              body: "Import a CSV, filter same-company versus personal, then name people in three taps. The map is built, not drawn.",
             },
           ].map((item) => (
             <li key={item.title} className="rounded-2xl border border-line p-5">
@@ -127,16 +126,16 @@ export default function HomePage() {
         </ul>
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-line bg-moss/60 px-6 py-8">
           <div>
-            <p className="font-display text-2xl text-chalk">Harbourline is ready.</p>
+            <p className="font-display text-2xl text-chalk">Use the sample export.</p>
             <p className="text-sm text-mist">
-              UK SaaS, ninety people, a slice an IC can actually see.
+              Harbourline CSV, then filter, then three questions. About five minutes.
             </p>
           </div>
           <Link
             href="/onboarding"
             className="rounded-full bg-chalk px-5 py-3 text-sm font-medium text-peat"
           >
-            Begin onboarding
+            Begin the builder
           </Link>
         </div>
       </section>

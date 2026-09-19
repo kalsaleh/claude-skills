@@ -105,15 +105,24 @@ export function youOf(workplace: Workplace) {
 export function insightsFor(workplace: Workplace): Insight[] {
   const you = youOf(workplace);
   const brokers = workplace.people
-    .filter((person) => person.tags?.includes("broker") && !person.you)
+    .filter(
+      (person) =>
+        !person.you &&
+        (person.tags?.includes("broker") || person.enrichment?.matter === "broker"),
+    )
     .slice(0, 3);
   const weak = workplace.people.filter(
-    (person) => person.tags?.includes("weak-tie") && !person.you,
+    (person) =>
+      !person.you &&
+      (person.tags?.includes("weak-tie") || person.enrichment?.tie === "weak"),
   );
   const folds = workplace.people.filter(
     (person) => person.tags?.includes("fold") && !person.you,
   );
-  const sponsors = workplace.people.filter((person) => person.tags?.includes("sponsor"));
+  const sponsors = workplace.people.filter(
+    (person) =>
+      person.tags?.includes("sponsor") || person.enrichment?.matter === "sponsor",
+  );
 
   const insights: Insight[] = [];
 

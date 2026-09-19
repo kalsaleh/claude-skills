@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { parseConnectionsCsv, workplaceFromConnections } from "@/lib/csv";
 import type { Intent, Profile } from "@/lib/types";
+import { DEFAULT_PROFILE } from "@/lib/types";
 import { useWorkplace } from "@/lib/workplace-context";
 
 const STEPS = [
@@ -33,51 +33,36 @@ const INTENTS: { id: Intent; title: string; body: string }[] = [
 
 export function OnboardingWizard() {
   const router = useRouter();
-  const { loadDemo, loadImported } = useWorkplace();
+  const { loadDemo, startBuilder } = useWorkplace();
   const [step, setStep] = useState(0);
-  const [profile, setProfile] = useState<Profile>({
-    name: "Alex Rowan",
-    role: "Senior Product Manager",
-    team: "Platform",
-    intent: "see-the-room",
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [profile, setProfile] = useState<Profile>(DEFAULT_PROFILE);
 
   const canNext = useMemo(() => {
-    if (step === 0) return profile.name.trim().length > 1 && profile.role.trim().length > 1;
+    if (step === 0) {
+      return (
+        profile.name.trim().length > 1 &&
+        profile.role.trim().length > 1 &&
+        profile.company.trim().length > 1
+      );
+    }
     if (step === 1) return Boolean(profile.intent);
     return true;
   }, [profile, step]);
 
-  const enterDemo = () => {
-    loadDemo(profile);
-    router.push("/map");
-  };
-
-  const onFile = async (file: File) => {
-    setBusy(true);
-    setError(null);
-    try {
-      const text = await file.text();
-      const rows = parseConnectionsCsv(text);
-      const workplace = workplaceFromConnections(rows, profile);
-      loadImported(workplace);
-      router.push("/map");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not read that file.");
-    } finally {
-      setBusy(false);
-    }
+  const goImport = () => {
+    startBuilder(profile);
+    router.push("/import");
   };
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-12">
-      <p className="text-[11px] uppercase tracking-[0.22em] text-copper">Three steps · then the map</p>
-      <h1 className="mt-2 font-display text-4xl text-chalk">Load a workplace</h1>
+      <p className="text-[11px] uppercase tracking-[0.22em] text-copper">
+        Three steps · then the map builder
+      </p>
+      <h1 className="mt-2 font-display text-4xl text-chalk">Who you are at work</h1>
       <p className="mt-3 text-mist">
-        Nothing leaves this browser. The Harbourline demo is the fastest way to see the prototype
-        working; a Connections.csv is optional.
+        LinkedIn proves the link. You name what it means. We match your company against the
+        export so the enrich queue is colleagues, not your entire address book.
       </p>
 
       <ol className="mt-8 flex gap-4 text-sm">
@@ -119,8 +104,17 @@ export function OnboardingWizard() {
                 onChange={(event) => setProfile({ ...profile, team: event.target.value })}
               />
             </label>
+            <label className="block text-sm text-mist">
+              Company
+              <input
+                className="mt-1 w-full rounded-xl border border-line bg-peat px-3 py-2 text-chalk"
+                value={profile.company}
+                onChange={(event) => setProfile({ ...profile, company: event.target.value })}
+              />
+            </label>
             <p className="text-xs text-mist">
-              Defaults are the Harbourline IC persona. Change them if you want the map to say you.
+              Defaults are the Harbourline IC persona. Company is how we split workplace from the
+              personal layer on import.
             </p>
           </div>
         ) : null}
@@ -146,46 +140,33 @@ export function OnboardingWizard() {
         ) : null}
 
         {step === 2 ? (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <button
               type="button"
-              onClick={enterDemo}
+              onClick={goImport}
               className="w-full rounded-2xl bg-aquifer px-5 py-5 text-left text-peat"
             >
-              <p className="text-[11px] uppercase tracking-[0.18em]">Recommended</p>
-              <p className="font-display text-2xl">Load demo workplace</p>
+              <p className="text-[11px] uppercase tracking-[0.18em]">Required path</p>
+              <p className="font-display text-2xl">Import connections and name them</p>
               <p className="mt-1 text-sm opacity-80">
-                Harbourline — UK SaaS, London HQ. Brokers, weak ties, two playbooks, already wired.
+                Upload a LinkedIn export or use the Harbourline sample. Then filter, then three
+                taps per person.
               </p>
             </button>
-            <div className="rounded-2xl border border-dashed border-line px-5 py-5">
-              <p className="font-medium text-chalk">Or import Connections.csv</p>
+            <button
+              type="button"
+              onClick={() => {
+                loadDemo(profile);
+                router.push("/map");
+              }}
+              className="w-full rounded-2xl border border-line px-5 py-4 text-left text-chalk hover:border-aquifer"
+            >
+              <p className="font-medium">Skip to a finished Harbourline map</p>
               <p className="mt-1 text-sm text-mist">
-                Optional. LinkedIn export stays in localStorage. We infer clusters from shared
-                organisations; we do not message anyone.
+                Pre-named demo for playbooks. Not the builder — use the sample CSV to see
+                enrichment.
               </p>
-              <label className="mt-4 inline-flex cursor-pointer rounded-full border border-line px-4 py-2 text-sm text-chalk hover:border-aquifer">
-                {busy ? "Reading…" : "Choose CSV"}
-                <input
-                  type="file"
-                  accept=".csv,text/csv"
-                  className="hidden"
-                  disabled={busy}
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    if (file) void onFile(file);
-                  }}
-                />
-              </label>
-              <p className="mt-3 text-xs text-mist">
-                Need a shape?{" "}
-                <a className="text-aquifer underline" href="/samples/Connections.csv">
-                  Download a sample file
-                </a>
-                .
-              </p>
-              {error ? <p className="mt-2 text-sm text-copper">{error}</p> : null}
-            </div>
+            </button>
           </div>
         ) : null}
 

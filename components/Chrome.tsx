@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useWorkplace } from "@/lib/workplace-context";
 
 const NAV = [
+  { href: "/import", label: "Builder" },
   { href: "/map", label: "Map" },
   { href: "/playbooks", label: "Playbooks" },
   { href: "/privacy", label: "Privacy" },
@@ -13,8 +14,12 @@ const NAV = [
 export function Header() {
   const pathname = usePathname();
   const router = useRouter();
-  const { ready, workplace, reset } = useWorkplace();
-  const inApp = pathname.startsWith("/map") || pathname.startsWith("/playbooks");
+  const { ready, workplace, builder, reset } = useWorkplace();
+  const inApp =
+    pathname.startsWith("/map") ||
+    pathname.startsWith("/playbooks") ||
+    pathname.startsWith("/enrich") ||
+    pathname.startsWith("/filter");
 
   return (
     <header className="sticky top-0 z-30 border-b border-line/80 bg-peat/85 backdrop-blur-md">
@@ -27,7 +32,10 @@ export function Header() {
         </Link>
         <nav className="flex items-center gap-1 text-sm">
           {NAV.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active =
+              item.href === "/import"
+                ? ["/import", "/filter", "/enrich"].some((path) => pathname.startsWith(path))
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
             return (
               <Link
                 key={item.href}
@@ -53,7 +61,15 @@ export function Header() {
             </button>
           ) : ready ? (
             <Link
-              href={workplace?.onboarded ? "/map" : "/onboarding"}
+              href={
+                workplace?.onboarded
+                  ? "/map"
+                  : builder?.stage === "enrich"
+                    ? "/enrich"
+                    : builder?.stage === "filter" || (builder?.people.length ?? 0) > 0
+                      ? "/filter"
+                      : "/onboarding"
+              }
               className="ml-2 rounded-full bg-aquifer px-3 py-1.5 text-sm font-medium text-peat hover:bg-aquifer/90"
             >
               {workplace?.onboarded ? "Open map" : "Enter"}

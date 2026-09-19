@@ -2,12 +2,15 @@
 
 The informal org chart for your career — not your pipeline.
 
-This is a clickable **IC prototype**: a Next.js 15 app that maps brokers, weak ties, and the quiet paths work actually takes. It ships with a fictional UK SaaS workplace (**Harbourline**), two playbooks, a Structural Fold manager-pack tease, and an optional LinkedIn `Connections.csv` import. Everything stays in `localStorage`. British English throughout.
+An **AI-assisted map builder** (heuristics today, same interface for a later Claude swap): import LinkedIn `Connections.csv`, split workplace vs personal, then name people in three taps. Everything stays in `localStorage`. British English.
 
 ## Browse and clone
 
 - Browse: https://github.com/kalsaleh/groundwater-prototype
 - Clone: `git clone https://github.com/kalsaleh/groundwater-prototype.git`
+
+Until that repo exists, the working branch is
+`cursor/groundwater-prototype-09cb` on `kalsaleh/claude-skills`.
 
 ## Run locally
 
@@ -18,24 +21,26 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-```bash
-npm run build
-npm start
-```
+## How to demo the enrich flow
 
-## What to click
+1. **Build your map** on the landing page (or `/onboarding`).
+2. Keep company as **Harbourline**. Continue to import.
+3. Click **Use sample** (do not skip to the finished demo).
+4. **Filter** — workplace count vs personal layer (Northsea / Dockside). Continue.
+5. **Name them** — top ~10–12 same-company people, ranked seniority → other-team → peer.
+   - Chip: “Suggested: Product · Broker — from title”
+   - Accept or override.
+   - Three taps: team · how they matter · tie (default weak).
+6. Name at least **five** people with a role other than “Not sure yet”, then open the map. Insights unlock.
+7. **Skip remaining** once to see the soft empty / locked-insights state.
 
-1. Landing — the IC promise.
-2. Onboarding — three steps, then **Load demo workplace**.
-3. Map — drag to pan, scroll to zoom, click people. Copper rings are brokers; dashed lines are weak ties.
-4. Playbooks — *Walk a pricing experiment into Finance* and *Find a sponsor for the pay-review room*. Each step can light a path on the map.
-5. Structural Fold — manager pack modal, not a checkout.
-6. Optional CSV — sample at [`public/samples/Connections.csv`](public/samples/Connections.csv).
-7. Privacy — delete the local workplace.
+“LinkedIn proves the link. You name what it means.”
 
-## Privacy
+## Also in the prototype
 
-No account, no server-side workplace, no analytics pixels. Demo colleagues are fictional. An imported CSV is parsed in the browser only.
+- Finished Harbourline map (onboarding → skip builder) for the two playbooks
+- Structural Fold manager-pack modal
+- Privacy page; no server; no LLM calls yet (`lib/suggest.ts` + `enrichmentAssistant.suggest`)
 
 ## Stack
 
