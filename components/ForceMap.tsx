@@ -432,7 +432,7 @@ export function ForceMap({
     <canvas
       ref={canvasRef}
       className="h-full w-full touch-none rounded-2xl bg-[#101816]"
-      aria-label="Workplace network map"
+      aria-label="Hidden network map"
     />
   );
 }

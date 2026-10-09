@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { clearStoredSession, clearVerdicts } from "@/lib/client-store";
 import { clearBuilder, clearWorkplace } from "@/lib/storage";
 import { useWorkplace } from "@/lib/workplace-context";
 
@@ -9,34 +10,26 @@ export default function PrivacyPage() {
 
   return (
     <article className="mx-auto max-w-2xl px-5 py-12">
-      <p className="text-[11px] uppercase tracking-[0.2em] text-copper">UK · browser only</p>
+      <p className="text-[11px] uppercase tracking-[0.2em] text-copper">UK · server for mapping only</p>
       <h1 className="mt-2 font-display text-4xl text-chalk">Privacy</h1>
       <div className="mt-6 space-y-4 text-sm leading-relaxed text-mist">
         <p>
-          Groundwater is an IC prototype. It does not create an account, it does not phone home,
-          and it does not store your workplace on a server. The map and the enrich answers live in{" "}
-          <code className="text-chalk">localStorage</code> in this browser, on this machine.
+          Confirmations — confirm, wrong, not sure — stay in <code className="text-chalk">localStorage</code>{" "}
+          on this browser. Clearing site data, or the button below, deletes them.
         </p>
         <p>
-          The Harbourline demo is fictional — a UK SaaS workplace invented so you can click the
-          product without uploading colleagues. If you choose to import a LinkedIn Connections.csv,
-          parsing and the three-question answers happen locally. We do not send the file, we do
-          not call an LLM, we do not match it against a graph database, and we do not contact
-          anyone in it.
+          Demo mode uses a fictional Harbourline team. Those LinkedIn URLs are not sent to The Swarm.
+          The sample people and companies are invented.
         </p>
         <p>
-          There are no analytics cookies, no advertising identifiers, and no third-party pixels on
-          this prototype. If you deploy it behind your own hosting, that host may see ordinary
-          request logs for static assets. The workplace itself still does not leave the browser.
+          Live mode sends the LinkedIn URLs you paste to this app’s server, which calls The Swarm
+          with <code className="text-chalk">SWARM_API_KEY</code>. The key is read from the server
+          environment and is never sent to the browser. The mapped network is held in server memory
+          for the session so routes can be searched. It is not written to a database.
         </p>
         <p>
-          Under UK GDPR this is data you hold yourself. Clearing the prototype deletes the
-          localStorage keys. Closing the tab does not. Use the button below, or your browser&apos;s
-          site-data controls.
-        </p>
-        <p>
-          The Structural Fold manager pack is a modal, not a purchase. There is no payment
-          processor and no email capture.
+          There is no account, no analytics cookie, and no advertising pixel in this prototype. A
+          host in front of the app may still keep ordinary request logs.
         </p>
       </div>
       <div className="mt-8 flex flex-wrap gap-3">
@@ -46,10 +39,12 @@ export default function PrivacyPage() {
           onClick={() => {
             clearWorkplace();
             clearBuilder();
+            clearVerdicts();
+            clearStoredSession();
             reset();
           }}
         >
-          Delete local workplace
+          Delete local confirmations
         </button>
         <Link href="/" className="rounded-full border border-line px-4 py-2 text-sm text-mist">
           Back to the start
