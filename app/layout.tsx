@@ -16,9 +16,9 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "Groundwater — informal org chart for your career",
+  title: "Groundwater — hidden ties inside your company",
   description:
-    "Not your pipeline. A clickable IC prototype that maps brokers, weak ties, and the quiet paths work actually takes.",
+    "Surface colleague ties you do not already know: shared pasts, public interactions, and the people who sit between coworkers.",
 };
 
 export default function RootLayout({

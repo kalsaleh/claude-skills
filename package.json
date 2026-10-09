@@ -2,7 +2,7 @@
   "name": "groundwater-prototype",
   "version": "0.1.0",
   "private": true,
-  "description": "Groundwater — informal org chart for your career (IC prototype)",
+  "description": "Groundwater — hidden ties inside your company",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

@@ -1,5 +1,5 @@
-import { MapExperience } from "@/components/MapExperience";
+import { redirect } from "next/navigation";
 
-export default function MapPage() {
-  return <MapExperience />;
+export default function MapRedirect() {
+  redirect("/network");
 }
